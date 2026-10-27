@@ -1,0 +1,56 @@
+<svg width="64" height="64" viewBox="-134 -134 268 268" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="discGrad_a05" cx="40%" cy="34%" r="68%">
+      <stop offset="0%" stop-color="#13633F"/>
+      <stop offset="58%" stop-color="#063F28"/>
+      <stop offset="100%" stop-color="#012618"/>
+    </radialGradient>
+
+    <linearGradient id="goldRim_a05" gradientUnits="userSpaceOnUse" x1="-135" y1="-135" x2="135" y2="135">
+      <stop offset="0%" stop-color="#F7E29B"/>
+      <stop offset="35%" stop-color="#DCB254"/>
+      <stop offset="70%" stop-color="#AE7F22"/>
+      <stop offset="100%" stop-color="#E7C36A"/>
+    </linearGradient>
+
+    <filter id="medallionShadow_a05" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4.5" flood-color="#042012" flood-opacity="0.22"/>
+    </filter>
+
+    <mask id="maskLeftD_a05" maskUnits="userSpaceOnUse" x="-200" y="-200" width="400" height="400">
+      <rect x="-200" y="-200" width="400" height="400" fill="white"/>
+      <g clip-path="url(#clipBottom_a05)">
+        <path d="M 60 -66 L 41 -66 A 66 66 0 0 0 41 66 L 60 66 Z" stroke="black" stroke-width="21.8" stroke-linejoin="round" fill="none"/>
+      </g>
+      <rect x="-73" y="-8.4" width="26" height="16.8" fill="black"/>
+    </mask>
+
+    <mask id="maskRightD_a05" maskUnits="userSpaceOnUse" x="-200" y="-200" width="400" height="400">
+      <rect x="-200" y="-200" width="400" height="400" fill="white"/>
+      <g clip-path="url(#clipTop_a05)">
+        <path d="M -60 -66 L -41 -66 A 66 66 0 0 1 -41 66 L -60 66 Z" stroke="black" stroke-width="21.8" stroke-linejoin="round" fill="none"/>
+      </g>
+      <rect x="47" y="-8.4" width="26" height="16.8" fill="black"/>
+    </mask>
+
+    <clipPath id="clipTop_a05">
+      <rect x="-150" y="-150" width="300" height="150"/>
+    </clipPath>
+    <clipPath id="clipBottom_a05">
+      <rect x="-150" y="0" width="300" height="150"/>
+    </clipPath>
+  </defs>
+  
+  <circle cx="0" cy="0" r="127" fill="url(#discGrad_a05)" filter="url(#medallionShadow_a05)"/>
+  
+      <circle cx="0" cy="0" r="129.2" stroke="#0A4A2E" stroke-width="1.4" opacity="0.80"/>
+      <circle cx="0" cy="0" r="126.5" stroke="url(#goldRim_a05)" stroke-width="4.2"/>
+      <circle cx="0" cy="0" r="115.5" stroke="url(#goldRim_a05)" stroke-width="1.5" opacity="0.86"/>
+  
+      <path d="M -60 -66 L -41 -66 A 66 66 0 0 1 -41 66 L -60 66 Z" stroke="#F6FEF9" stroke-width="10.6" stroke-linejoin="round" fill="none" mask="url(#maskLeftD_a05)"/>
+      <path d="M 60 -66 L 41 -66 A 66 66 0 0 0 41 66 L 60 66 Z" stroke="#F6FEF9" stroke-width="10.6" stroke-linejoin="round" fill="none" mask="url(#maskRightD_a05)"/>
+      <polygon points="-84,0 -75,-4.5 -45,-4.5 -36,0 -45,4.5 -75,4.5" fill="url(#goldRim_a05)"/>
+      <polygon points="84,0 75,-4.5 45,-4.5 36,0 45,4.5 75,4.5" fill="url(#goldRim_a05)"/>
+      <polygon points="0,-18 11.5,0 0,18 -11.5,0" fill="#92C846"/>
+      <circle cx="0" cy="0" r="3.2" fill="#F7E29B"/>
+</svg>
