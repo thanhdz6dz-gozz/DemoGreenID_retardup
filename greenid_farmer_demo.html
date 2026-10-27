@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>GreenID Bình Mỹ — Sổ Chăm Cây NFC (Giao diện Nhà Vườn Chú Mai)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Poster & Medallion Logo Synced Palette — Điền Trang Đại Đồng */
+      --poster-bg: #E5EDE0;
+      --app-canvas: #ECF1E5;
+      --card-cream: #F9FBF6;
+      --card-checked: #EDF6E5;
+      --forest-deep: #063F28;
+      --forest-mid: #0C5638;
+      --forest-dark: #042618;
+      --moss-banner: #4D7A32;
+      --moss-dark: #3B6124;
+      --sprout-bright: #8CC63F;
+      --gold-light: #F6E099;
+      --gold-main: #DCB254;
+      --gold-bronze: #9E7219;
+      --gold-soft: rgba(220, 178, 84, 0.22);
+      --ink-main: #092C1D;
+      --ink-body: #223A2C;
+      --ink-muted: #4C6353;
+      --line-sage: #BCCBAE;
+      --line-strong: #8AA279;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at 14% 12%, rgba(220, 178, 84, 0.16), transparent 36%),
+        radial-gradient(circle at 86% 85%, rgba(77, 122, 50, 0.15), transparent 40%),
+        var(--poster-bg);
+      color: var(--ink-main);
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, textarea {
+      font-family: inherit;
+    }
+
+    button:focus-visible, textarea:focus-visible, input:focus-visible {
+      outline: 3px solid var(--gold-bronze);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================================================
+       DESKTOP WORKSPACE (Mobile Frame + Quick Tester Sidebar)
+       ========================================================================== */
+    .demo-workspace {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      max-width: 1080px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .phone-shell {
+      width: 416px;
+      height: 856px;
+      background: var(--forest-dark);
+      border-radius: 44px;
+      padding: 11px;
+      box-shadow:
+        0 26px 60px rgba(6, 42, 25, 0.26),
+        0 0 0 2.5px var(--gold-main),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-notch {
+      width: 112px;
+      height: 20px;
+      background: var(--forest-dark);
+      border-radius: 0 0 13px 13px;
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone-notch::after {
+      content: '';
+      width: 40px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .app-viewport {
+      flex: 1;
+      background: var(--app-canvas);
+      border-radius: 34px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       TOP HEADER + REFINED "SIMPLE MODE" PILL SWITCH
+       ========================================================================== */
+    .app-topbar {
+      background: linear-gradient(155deg, #0D5939 0%, #063F28 66%, #042B1B 100%);
+      color: #F9FBF6;
+      padding: 25px 14px 11px;
+      border-bottom: 2px solid var(--gold-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .brand-titles {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-eyebrow {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 0.02em;
+    }
+
+    .brand-name {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    /* Refined Tactile Simple Mode Switch */
+    .simple-switch-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(220, 178, 84, 0.65);
+      color: #F4F8F0;
+      padding: 5px 7px 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .simple-switch-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--gold-light);
+    }
+    .simple-switch-btn.active {
+      background: rgba(220, 178, 84, 0.24);
+      border-color: var(--gold-light);
+      box-shadow: 0 0 0 2px rgba(220, 178, 84, 0.18);
+    }
+
+    .sm-text-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.08;
+    }
+    .sm-vi {
+      font-size: 11px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .sm-en {
+      font-size: 9.2px;
+      font-weight: 600;
+      color: var(--gold-light);
+      opacity: 0.92;
+    }
+
+    .sm-track {
+      width: 32px;
+      height: 18px;
+      border-radius: 99px;
+      background: rgba(4, 30, 18, 0.65);
+      border: 1px solid rgba(220, 178, 84, 0.55);
+      position: relative;
+      transition: background 0.2s ease;
+    }
+    .simple-switch-btn.active .sm-track {
+      background: var(--gold-main);
+      border-color: var(--gold-light);
+    }
+
+    .sm-knob {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #E2ECE5;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease;
+    }
+    .simple-switch-btn.active .sm-knob {
+      transform: translateX(14px);
+      background: var(--forest-dark);
+    }
+
+    /* ==========================================================================
+       SCREENS CONTAINER
+       ========================================================================== */
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .screen.active {
+      display: flex;
+      animation: screenFade 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes screenFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       SCREEN 1: HOME (TREE HEADER + TREE PHOTO + SYMMETRICAL ACTION PAD)
+       ========================================================================== */
+    .home-body {
+      flex: 1;
+      padding: 11px 13px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .home-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* 1. Tree Identity & Full Multi-Task Last Care Card */
+    .nfc-tree-card {
+      background: var(--card-cream);
+      border: 1.8px solid var(--line-strong);
+      border-radius: 15px;
+      padding: 10px 12px;
+      box-shadow: 0 2px 8px rgba(6, 63, 40, 0.05);
+      flex-shrink: 0;
+    }
+
+    .tree-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .nfc-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #E2F0D9;
+      border: 1px solid #88B870;
+      color: var(--forest-deep);
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .nfc-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2E8540;
+    }
+
+    .tree-code {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gold-bronze);
+      background: var(--gold-soft);
+      padding: 2px 8px;
+      border-radius: 7px;
+    }
+
+    .tree-title {
+      font-size: 17.5px;
+      font-weight: 800;
+      color: var(--forest-deep);
+      line-height: 1.22;
+    }
+
+    .tree-owner {
+      font-size: 12.2px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-bottom: 7px;
+    }
+
+    /* Multi-item Last Care Summary */
+    .last-care-box {
+      background: #EEF4E7;
+      border-left: 3.5px solid var(--moss-banner);
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: 12.6px;
+      line-height: 1.35;
+      color: var(--ink-body);
+    }
+
+    .lc-header {
+      font-weight: 700;
+      color: var(--ink-muted);
+      font-size: 11.5px;
+      margin-right: 4px;
+    }
+
+    .lc-items-text {
+      font-weight: 800;
+      color: var(--forest-deep);
+    }
+
+    /* Visual Icon Pills shown in Simple Mode for Last Care */
+    .lc-icon-strip {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .lc-mini-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1.2px solid var(--line-strong);
+      border-radius: 8px;
+      padding: 3px 7px;
+      height: 28px;
+    }
+    .lc-mini-pill svg {
+      width: 20px;
+      height: 20px;
+    }
+    .lc-plus {
+      font-weight: 800;
+      color: var(--moss-banner);
+      font-size: 13px;
+    }
+    .lc-date-chip {
+      margin-left: auto;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--forest-deep);
+      background: var(--gold-soft);
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    /* 2. Center Captured Tree Photo ("Ảnh của cây đã chụp" ở giữa giao diện) */
+    .center-tree-photo-card {
+      position: relative;
+      height: 192px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid var(--gold-main);
+      background: #132A1E;
+      box-shadow: 0 5px 14px rgba(6, 63, 40, 0.12);
+      flex-shrink: 0;
+    }
+
+    .center-tree-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .tree-photo-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(6, 48, 30, 0.86);
+      backdrop-filter: blur(4px);
+      color: #F9FBF6;
+      border: 1px solid rgba(220, 178, 84, 0.7);
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tree-photo-note-pill {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(249, 251, 246, 0.92);
+      color: var(--forest-deep);
+      border: 1px solid var(--gold-main);
+      border-radius: 99px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      max-width: 68%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 3. Action Pad: Row 1 Wide Bar + 2x2 Square Checkboxes + Bottom Equal Wide Bar */
+    .action-pad {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    /* Shared Exact Dimensions for Top "Cập nhật hình dáng cây" & Bottom "Quét cây khác" */
+    .wide-action-btn {
+      width: 100%;
+      height: 54px;
+      border-radius: 14px;
+      padding: 0 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 15.5px;
+      font-weight: 800;
+      transition: transform 0.12s ease, box-shadow 0.16s ease, background 0.16s ease;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .wide-action-btn:active {
+      transform: scale(0.985);
+    }
+
+    /* Top Wide Button: Cập nhật hình dáng cây */
+    .wide-action-btn.update-shape-btn {
+      background: var(--moss-banner);
+      color: #FFFFFF;
+      border: 2px solid #355920;
+      box-shadow: 0 4px 10px rgba(77, 122, 50, 0.22);
+    }
+    .wide-action-btn.update-shape-btn:hover {
+      background: var(--moss-dark);
+    }
+
+    /* Bottom Wide Button: Quét cây khác (Exact same width & height = 54px) */
+    .wide-action-btn.scan-other-btn {
+      background: linear-gradient(135deg, #0A5234 0%, #063F28 100%);
+      color: #FFFFFF;
+      border: 2px solid var(--gold-main);
+      box-shadow: 0 4px 12px rgba(6, 63, 40, 0.22);
+    }
+    .wide-action-btn.scan-other-btn:hover {
+      background: var(--forest-mid);
+    }
+
+    .wide-btn-icon {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    /* 2x2 Grid of 4 Medium Square Checkboxes */
+    .square-checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      flex: 1;
+    }
+
+    .sq-task-card {
+      background: var(--card-cream);
+      border: 2px solid var(--line-sage);
+      border-radius: 16px;
+      padding: 10px 11px;
+      min-height: 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      transition: border-color 0.16s ease, background 0.16s ease, transform 0.1s ease, box-shadow 0.16s ease;
+    }
+    .sq-task-card:hover {
+      border-color: var(--moss-banner);
+      box-shadow: 0 4px 12px rgba(6, 63, 40, 0.08);
+    }
+    .sq-task-card:active {
+      transform: scale(0.975);
+    }
+    .sq-task-card.checked {
+      background: var(--card-checked);
+      border-color: var(--forest-deep);
+      box-shadow: 0 4px 12px rgba(6, 63, 40, 0.1);
+    }
+
+    .sq-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .sq-checkbox {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 2.2px solid var(--forest-deep);
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .sq-task-card.checked .sq-checkbox {
+      background: var(--forest-deep);
+      border-color: var(--gold-main);
+    }
+
+    .sq-check-svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.15s ease;
+    }
+    .sq-task-card.checked .sq-check-svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Mini captured fertilizer thumbnail shown inside square when checked */
+    .sq-saved-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #FFFFFF;
+      border: 1px solid var(--gold-main);
+      border-radius: 7px;
+      padding: 2px 5px 2px 2px;
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--forest-deep);
+    }
+    .sq-saved-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      object-fit: cover;
+    }
+
+    .sq-cam-mini {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      opacity: 0.75;
+    }
+
+    .sq-center-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 2px;
+      flex: 1;
+    }
+
+    .sq-icon-svg {
+      width: 40px;
+      height: 40px;
+      transition: width 0.2s ease, height 0.2s ease, transform 0.2s ease;
+    }
+
+    .sq-task-label {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--ink-main);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* ==========================================================================
+       SIMPLE MODE ("CHẾ ĐỘ ĐƠN GIẢN") — REFINED FULL-ICON TRANSFORMATION
+       ========================================================================== */
+    body.simple-mode .tree-owner,
+    body.simple-mode .nfc-pill span.nfc-verbose,
+    body.simple-mode .lc-header,
+    body.simple-mode .lc-items-text,
+    body.simple-mode .tree-photo-badge span.tpb-label,
+    body.simple-mode .sq-task-label,
+    body.simple-mode .sq-cam-mini,
+    body.simple-mode .wide-btn-label {
+      display: none;
+    }
+
+    body.simple-mode .nfc-pill {
+      padding: 4px 8px;
+    }
+
+    body.simple-mode .last-care-box {
+      padding: 5px 8px;
+    }
+
+    body.simple-mode .lc-icon-strip {
+      display: flex;
+    }
+
+    body.simple-mode .sq-icon-svg {
+      width: 58px;
+      height: 58px;
+    }
+
+    body.simple-mode .sq-task-card {
+      padding: 9px 10px 11px;
+    }
+
+    body.simple-mode .wide-btn-icon {
+      width: 42px;
+      height: 42px;
+    }
+
+    body.simple-mode .wide-action-btn {
+      gap: 10px;
+    }
+
+    .sm-only-cue {
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+    body.simple-mode .sm-only-cue {
+      display: inline-flex;
+    }
+
+    /* ==========================================================================
+       SCREEN 2: CAMERA CAPTURE (PRODUCT OR TREE SHAPE)
+       ========================================================================== */
+    .subscreen-nav {
+      background: var(--card-cream);
+      border-bottom: 1.5px solid var(--line-sage);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      background: #E8EFE1;
+      border: 1.5px solid var(--line-strong);
+      color: var(--forest-deep);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .step-chip {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #6B4C0B;
+      background: var(--gold-soft);
+      border: 1px solid var(--gold-main);
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+
+    .cam-guide-box {
+      padding: 11px 15px 9px;
+      background: var(--app-canvas);
+      flex-shrink: 0;
+    }
+
+    .cam-task-tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--moss-banner);
+      margin-bottom: 2px;
+    }
+
+    .cam-headline {
+      font-size: 17.5px;
+      font-weight: 800;
+      color: var(--forest-deep);
+      line-height: 1.28;
+    }
+
+    .viewfinder-wrap {
+      flex: 1;
+      margin: 0 15px;
+      background: #10231A;
+      border-radius: 20px;
+      border: 2.5px solid var(--forest-deep);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+    }
+
+    .vf-sample-img, .vf-live-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #FAFBF8;
+    }
+    .vf-sample-img.cover-mode {
+      object-fit: cover;
+    }
+    .vf-live-video {
+      object-fit: cover;
+      display: none;
+    }
+
+    .vf-corner {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: var(--gold-main);
+      border-style: solid;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .vf-corner.tl { top: 13px; left: 13px; border-width: 4px 0 0 4px; border-top-left-radius: 8px; }
+    .vf-corner.tr { top: 13px; right: 13px; border-width: 4px 4px 0 0; border-top-right-radius: 8px; }
+    .vf-corner.bl { bottom: 13px; left: 13px; border-width: 0 0 4px 4px; border-bottom-left-radius: 8px; }
+    .vf-corner.br { bottom: 13px; right: 13px; border-width: 0 4px 4px 0; border-bottom-right-radius: 8px; }
+
+    .vf-caption-pill {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(6, 63, 40, 0.90);
+      color: #FFFFFF;
+      border: 1px solid var(--gold-main);
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      z-index: 6;
+    }
+
+    .cam-controls-dock {
+      padding: 13px 15px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+
+    .shutter-primary-btn {
+      width: 100%;
+      background: var(--forest-deep);
+      color: #FFFFFF;
+      border: 2.5px solid var(--gold-main);
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 17.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 16px rgba(6, 63, 40, 0.22);
+    }
+
+    .shutter-ring {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--gold-main);
+      border: 3px solid #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .cam-secondary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .cam-sec-btn {
+      background: var(--card-cream);
+      border: 1.5px solid var(--line-strong);
+      color: var(--ink-main);
+      padding: 9px 8px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       SCREEN 3: PHOTO REVIEW + MANUAL NOTE (PRE-MIXED FERTILIZER) + SAVE
+       ========================================================================== */
+    .scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 13px 15px 16px;
+    }
+
+    .captured-preview-card {
+      background: var(--card-cream);
+      border: 2px solid var(--line-strong);
+      border-radius: 15px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .captured-img {
+      width: 82px;
+      height: 82px;
+      border-radius: 11px;
+      object-fit: cover;
+      border: 2px solid var(--gold-main);
+      background: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .captured-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .captured-task-title {
+      font-size: 16.5px;
+      font-weight: 800;
+      color: var(--forest-deep);
+      margin-bottom: 2px;
+    }
+
+    .captured-timestamp {
+      font-size: 12.8px;
+      font-weight: 600;
+      color: var(--moss-banner);
+      margin-bottom: 6px;
+    }
+
+    .retake-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .retake-inline-btn {
+      background: #EEF4E7;
+      border: 1.5px solid var(--line-strong);
+      color: var(--forest-deep);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .retake-inline-btn.danger {
+      background: #FFF7ED;
+      border-color: #FDBA74;
+      color: #9A3412;
+    }
+
+    .note-box-card {
+      background: var(--card-cream);
+      border: 2px solid var(--moss-banner);
+      border-radius: 15px;
+      padding: 12px 13px;
+    }
+
+    .note-label {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--forest-deep);
+      margin-bottom: 3px;
+    }
+
+    .note-helper {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      line-height: 1.36;
+      margin-bottom: 9px;
+    }
+
+    .farmer-textarea {
+      width: 100%;
+      min-height: 96px;
+      background: #FFFFFF;
+      border: 2px solid var(--line-strong);
+      border-radius: 12px;
+      padding: 10px 11px;
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--ink-main);
+      line-height: 1.4;
+      resize: vertical;
+    }
+    .farmer-textarea:focus {
+      border-color: var(--forest-deep);
+    }
+
+    .quick-chips-label {
+      font-size: 12.2px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      margin: 9px 0 6px;
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .q-chip {
+      background: #EEF4E7;
+      border: 1.5px solid var(--line-strong);
+      color: var(--forest-deep);
+      padding: 5px 10px;
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .q-chip:hover {
+      background: var(--gold-soft);
+      border-color: var(--gold-bronze);
+    }
+
+    .save-dock {
+      padding: 11px 15px 16px;
+      background: var(--card-cream);
+      border-top: 1.5px solid var(--line-sage);
+      flex-shrink: 0;
+    }
+
+    .save-nfc-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #094D31 0%, #063F28 100%);
+      color: #FFFFFF;
+      border: 2.5px solid var(--gold-main);
+      border-radius: 15px;
+      padding: 14px 18px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(6, 63, 40, 0.22);
+    }
+
+    /* ==========================================================================
+       SCREEN 4: NFC SCANNING STATE ("ĐANG QUÉT")
+       ========================================================================== */
+    .scan-screen-body {
+      flex: 1;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(77, 122, 50, 0.22), transparent 58%),
+        linear-gradient(180deg, #08492E 0%, #053220 100%);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 20px 22px;
+      text-align: center;
+    }
+
+    .scan-radar-stage {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 26px;
+    }
+
+    .radar-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(220, 178, 84, 0.55);
+      animation: radarPulse 2.2s infinite cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .radar-ring.r1 { width: 110px; height: 110px; animation-delay: 0s; }
+    .radar-ring.r2 { width: 162px; height: 162px; animation-delay: 0.55s; }
+    .radar-ring.r3 { width: 214px; height: 214px; animation-delay: 1.1s; }
+
+    @keyframes radarPulse {
+      0% { transform: scale(0.78); opacity: 0.95; }
+      100% { transform: scale(1.12); opacity: 0; }
+    }
+
+    .radar-core {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #146B46, #04291A);
+      border: 3px solid var(--gold-main);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .scan-status-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gold-light);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+
+    .scan-status-desc {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: #D7EADF;
+      line-height: 1.45;
+      max-width: 300px;
+    }
+    body.simple-mode .scan-status-desc {
+      display: none;
+    }
+
+    .scan-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .sim-nfc-hit-btn {
+      width: 100%;
+      background: var(--gold-main);
+      color: var(--forest-dark);
+      border: none;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+    }
+    .sim-nfc-hit-btn:hover {
+      background: var(--gold-light);
+    }
+
+    .cancel-scan-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      border-radius: 14px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Toast Notification in Top Deadzone (Never blocks bottom action buttons) */
+    .app-toast {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100% - 26px);
+      width: max-content;
+      background: rgba(6, 63, 40, 0.95);
+      backdrop-filter: blur(6px);
+      color: #FFFFFF;
+      border: 1.8px solid var(--gold-main);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 22px rgba(4, 38, 24, 0.24);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      z-index: 45;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .app-toast.show {
+      display: inline-flex;
+      animation: toastSlideDown 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes toastSlideDown {
+      from { opacity: 0; transform: translate(-50%, -10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* ==========================================================================
+       RIGHT PANEL: DESKTOP INSPECTOR / FLOW TESTER
+       ========================================================================== */
+    .tester-panel {
+      flex: 1;
+      max-width: 470px;
+      background: var(--card-cream);
+      border: 2px solid var(--line-sage);
+      border-radius: 22px;
+      padding: 22px 25px;
+      box-shadow: 0 14px 36px rgba(6, 63, 40, 0.08);
+    }
+
+    .tp-badge {
+      display: inline-block;
+      background: var(--moss-banner);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 11px;
+      border-radius: 99px;
+      margin-bottom: 9px;
+    }
+
+    .tp-title {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--forest-deep);
+      line-height: 1.26;
+      margin-bottom: 8px;
+    }
+
+    .tp-lead {
+      font-size: 14px;
+      color: var(--ink-body);
+      line-height: 1.48;
+      margin-bottom: 15px;
+    }
+
+    .tp-flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 16px;
+    }
+
+    .tp-step {
+      background: #EEF4E7;
+      border: 1.5px solid var(--line-sage);
+      border-left: 4px solid var(--forest-deep);
+      border-radius: 11px;
+      padding: 10px 13px;
+      font-size: 13.2px;
+      line-height: 1.42;
+      color: var(--ink-body);
+    }
+    .tp-step strong {
+      color: var(--forest-deep);
+    }
+    .tp-step > strong:first-child {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .tp-controls-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+    }
+
+    .tp-btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tp-btn {
+      background: #FFFFFF;
+      border: 1.5px solid var(--line-strong);
+      color: var(--forest-deep);
+      padding: 9px 11px;
+      border-radius: 10px;
+      font-size: 12.8px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .tp-btn:hover {
+      background: var(--gold-soft);
+      border-color: var(--gold-bronze);
+    }
+
+    .palette-strip {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 11px;
+      border-top: 1px dashed var(--line-sage);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+    .swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.18);
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 0; background: var(--app-canvas); }
+      .demo-workspace { gap: 0; }
+      .tester-panel { display: none; }
+      .phone-shell {
+        width: 100%;
+        height: 100dvh;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+      .phone-notch { display: none; }
+      .app-viewport { border-radius: 0; }
+      .app-topbar { padding-top: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== BESPOKE DUOTONE VECTOR ICON DEFINITIONS ==================== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- Official Medallion Gradients -->
+      <radialGradient id="dg" cx="40%" cy="34%" r="68%">
+        <stop offset="0%" stop-color="#13633F"/>
+        <stop offset="58%" stop-color="#063F28"/>
+        <stop offset="100%" stop-color="#012618"/>
+      </radialGradient>
+      <linearGradient id="gr" gradientUnits="userSpaceOnUse" x1="-135" y1="-135" x2="135" y2="135">
+        <stop offset="0%" stop-color="#F7E29B"/>
+        <stop offset="35%" stop-color="#DCB254"/>
+        <stop offset="70%" stop-color="#AE7F22"/>
+        <stop offset="100%" stop-color="#E7C36A"/>
+      </linearGradient>
+
+      <!-- 1. Icon: Cập nhật hình dáng cây (Unmistakable Camera Body + Lens) -->
+      <g id="ico-tree-cam">
+        <rect x="8" y="18" width="48" height="34" rx="8" fill="#F9FBF6" stroke="#063F28" stroke-width="2.8"/>
+        <path d="M21 18l4-7h14l4 7" fill="#DCB254" stroke="#063F28" stroke-width="2.6" stroke-linejoin="round"/>
+        <circle cx="32" cy="35" r="10.5" fill="#063F28"/>
+        <circle cx="32" cy="35" r="6.8" fill="#8CC63F"/>
+        <circle cx="29.5" cy="32.5" r="2.2" fill="#F9FBF6"/>
+        <circle cx="47" cy="25" r="2.3" fill="#DCB254"/>
+      </g>
+
+      <!-- Mini Tree silhouette for Simple Mode visual pairing -->
+      <g id="ico-mini-tree">
+        <circle cx="32" cy="24" r="11" fill="#9BE048" stroke="#063F28" stroke-width="2.4"/>
+        <circle cx="23" cy="29" r="8" fill="#B2EC68" stroke="#063F28" stroke-width="2.2"/>
+        <circle cx="41" cy="29" r="8" fill="#7BC02B" stroke="#063F28" stroke-width="2.2"/>
+        <path d="M32 32v14" stroke="#F9FBF6" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M22 46h20l-2.5 8H24.5L22 46Z" fill="#DCB254" stroke="#063F28" stroke-width="2.2" stroke-linejoin="round"/>
+      </g>
+
+      <!-- 2. Icon: Bón phân (Organic Fertilizer Bag + Green Sprout + Granules) -->
+      <g id="ico-fertilize">
+        <path d="M18 20h28l3 30a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4l3-30Z" fill="#EFE4C8" stroke="#063F28" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M21 12h22l-3 8H24l-3-8Z" fill="#4D7A32" stroke="#063F28" stroke-width="2.6" stroke-linejoin="round"/>
+        <line x1="20" y1="21" x2="44" y2="21" stroke="#DCB254" stroke-width="3" stroke-linecap="round"/>
+        <path d="M32 43V31" stroke="#063F28" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M32 36c-6 0-9-4.5-8-9 5 0 8 3.5 8 9Z" fill="#8CC63F" stroke="#063F28" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M32 33c5.5 0 8.5-4 7.5-8-4.5 0-7.5 3-7.5 8Z" fill="#4D7A32" stroke="#063F28" stroke-width="2.2" stroke-linejoin="round"/>
+        <circle cx="49" cy="51" r="2.2" fill="#6E4720"/>
+        <circle cx="54" cy="53" r="2" fill="#6E4720"/>
+        <circle cx="45" cy="54" r="1.8" fill="#4D7A32"/>
+      </g>
+
+      <!-- 3. Icon: Tưới nước (Garden Watering Can + Shower Droplets) -->
+      <g id="ico-water">
+        <path d="M18 26h20l2 22a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3l2-22Z" fill="#176B4C" stroke="#063F28" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M18 30c-6 0-9 4-9 9s3 8 8 8" fill="none" stroke="#063F28" stroke-width="2.8" stroke-linecap="round"/>
+        <path d="M21 26v-5a7 7 0 0 1 14 0v5" fill="none" stroke="#063F28" stroke-width="2.8"/>
+        <path d="M38 34l11-9" stroke="#063F28" stroke-width="3.6" stroke-linecap="round"/>
+        <ellipse cx="50.5" cy="24.5" rx="3.2" ry="5" transform="rotate(-38 50.5 24.5)" fill="#DCB254" stroke="#063F28" stroke-width="2.2"/>
+        <path d="M53 33c0 2.2-1.6 3.6-1.6 3.6S49.8 35.2 49.8 33a1.6 1.6 0 0 1 3.2 0Z" fill="#2596C4"/>
+        <path d="M58 39c0 2.2-1.6 3.6-1.6 3.6S54.8 41.2 54.8 39a1.6 1.6 0 0 1 3.2 0Z" fill="#2596C4"/>
+        <path d="M50 43c0 2.2-1.6 3.6-1.6 3.6S46.8 45.2 46.8 43a1.6 1.6 0 0 1 3.2 0Z" fill="#3EB0DE"/>
+      </g>
+
+      <!-- 4. Icon: Tỉa cành (Garden Pruning Shears + Leafy Branch) -->
+      <g id="ico-prune">
+        <path d="M12 48c10-6 22-18 36-32" stroke="#6E4B26" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M40 24c5-5 12-4 13 1-5 4-10 3-13-1Z" fill="#8CC63F" stroke="#063F28" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M28 36c-5-5-4-12 1-13 4 5 3 10-1 13Z" fill="#8CC63F" stroke="#063F28" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M16 16c9 2 16 9 18 18l-8 2c-5-5-8-11-10-20Z" fill="#DCE5DF" stroke="#063F28" stroke-width="2.6" stroke-linejoin="round"/>
+        <path d="M20 12c2 9 9 16 18 18l2-8c-5-5-11-8-20-10Z" fill="#F4F7F5" stroke="#063F28" stroke-width="2.6" stroke-linejoin="round"/>
+        <path d="M33 33l13 15" stroke="#4D7A32" stroke-width="5.2" stroke-linecap="round"/>
+        <path d="M36 30l15 11" stroke="#063F28" stroke-width="5.2" stroke-linecap="round"/>
+        <circle cx="33" cy="31" r="4" fill="#DCB254" stroke="#063F28" stroke-width="2.2"/>
+      </g>
+
+      <!-- 5. Icon: Phun sinh học (Bio Sprayer + Protective Leaf) -->
+      <g id="ico-biospray">
+        <path d="M16 27h14l3 23a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3l3-23Z" fill="#DFEFD5" stroke="#063F28" stroke-width="2.6" stroke-linejoin="round"/>
+        <rect x="19" y="19" width="8" height="8" rx="2" fill="#4D7A32" stroke="#063F28" stroke-width="2.4"/>
+        <path d="M16 15h15l4 3-4 3H16v-6Z" fill="#DCB254" stroke="#063F28" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M16 19l-5 5" stroke="#063F28" stroke-width="2.8" stroke-linecap="round"/>
+        <circle cx="39" cy="16" r="1.8" fill="#2596C4"/>
+        <circle cx="44" cy="13" r="1.8" fill="#2596C4"/>
+        <circle cx="44" cy="20" r="1.8" fill="#4D7A32"/>
+        <path d="M46 27c8 0 11 8 9 16-3 7-10 10-15 9-3-7-2-16 6-25Z" fill="#8CC63F" stroke="#063F28" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M42 46c3-6 6-11 10-15" stroke="#063F28" stroke-width="2.3" stroke-linecap="round"/>
+      </g>
+
+      <!-- 6. Icon: Quét cây khác (Universal Zalo-Style Scan Frame + Laser Beam + Tree Tag) -->
+      <g id="ico-nfc-scan">
+        <!-- 4 Bold Rounded Scanner Corner Brackets -->
+        <path d="M10 22V14a5 5 0 0 1 5-5h8" fill="none" stroke="#F6E099" stroke-width="4.2" stroke-linecap="round"/>
+        <path d="M41 9h8a5 5 0 0 1 5 5v8" fill="none" stroke="#F6E099" stroke-width="4.2" stroke-linecap="round"/>
+        <path d="M54 42v8a5 5 0 0 1-5 5h-8" fill="none" stroke="#F6E099" stroke-width="4.2" stroke-linecap="round"/>
+        <path d="M23 55h-8a5 5 0 0 1-5-5v-8" fill="none" stroke="#F6E099" stroke-width="4.2" stroke-linecap="round"/>
+        <!-- Inner Tree / Tag being scanned -->
+        <circle cx="32" cy="24" r="7.5" fill="#8CC63F"/>
+        <circle cx="26.5" cy="27" r="5.2" fill="#A6E258"/>
+        <circle cx="37.5" cy="27" r="5.2" fill="#74B82A"/>
+        <path d="M32 29v15" stroke="#F9FBF6" stroke-width="3" stroke-linecap="round"/>
+        <rect x="25" y="43" width="14" height="5" rx="2" fill="#DCB254"/>
+        <!-- Glowing Horizontal Laser Scan Line -->
+        <rect x="6" y="29" width="52" height="6" rx="3" fill="#DCB254" opacity="0.38"/>
+        <line x1="6" y1="32" x2="58" y2="32" stroke="#FFF9DB" stroke-width="3.4" stroke-linecap="round"/>
+      </g>
+    </defs>
+  </svg>
+
+  <div class="demo-workspace">
+    <!-- ==================== MOBILE DEVICE FRAME ==================== -->
+    <div class="phone-shell">
+      <div class="phone-notch" aria-hidden="true"></div>
+
+      <div class="app-viewport">
+        <!-- Poster-Synced Medallion Topbar + Refined Simple Mode Toggle -->
+        <header class="app-topbar">
+          <div class="brand-cluster">
+            <svg class="brand-logo" viewBox="-190 -190 380 380" fill="none" aria-hidden="true">
+              <polygon points="136,0 148,6 181,0 148,-6" fill="#E2B655"/>
+              <polygon points="-136,0 -148,-6 -181,0 -148,6" fill="#E2B655"/>
+              <polygon points="0,136 -6,148 0,181 6,148" fill="#E2B655"/>
+              <polygon points="0,-136 6,-148 0,-181 -6,-148" fill="#E2B655"/>
+              <polygon points="96,96 108,100 132,132 100,108" fill="#DCB254"/>
+              <polygon points="-96,96 -100,108 -132,132 -108,100" fill="#DCB254"/>
+              <polygon points="-96,-96 -108,-100 -132,-132 -100,-108" fill="#DCB254"/>
+              <polygon points="96,-96 100,-108 132,-132 108,-100" fill="#DCB254"/>
+              <circle cx="0" cy="0" r="126" fill="url(#dg)" stroke="url(#gr)" stroke-width="7"/>
+              <circle cx="0" cy="0" r="112" stroke="url(#gr)" stroke-width="2" opacity="0.85"/>
+              <path d="M -58 -64 L -39 -64 A 64 64 0 0 1 -39 64 L -58 64 Z" stroke="#F6FEF9" stroke-width="13" stroke-linejoin="round" fill="none"/>
+              <path d="M 58 -64 L 39 -64 A 64 64 0 0 0 39 64 L 58 64 Z" stroke="#F6FEF9" stroke-width="13" stroke-linejoin="round" fill="none"/>
+              <polygon points="0,-22 14,0 0,22 -14,0" fill="#92C846"/>
+            </svg>
+            <div class="brand-titles">
+              <span class="brand-eyebrow">Điền Trang Đại Đồng</span>
+              <span class="brand-name">Sổ Cây GreenID</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="simple-switch-btn"
+            id="simple-mode-btn"
+            role="switch"
+            aria-checked="false"
+            onclick="toggleSimpleMode()"
+            title="Chế độ đơn giản (Simple Mode) — Hiển thị thuần biểu tượng trực quan"
+          >
+            <span class="sm-text-stack">
+              <span class="sm-vi">Chế độ đơn giản</span>
+              <span class="sm-en">Simple mode</span>
+            </span>
+            <span class="sm-track" aria-hidden="true"><span class="sm-knob"></span></span>
+          </button>
+        </header>
+
+        <!-- ==================== SCREEN 1: COMPACT HOME ==================== -->
+        <section class="screen active" id="screen-list">
+          <div class="home-body">
+            <!-- 1. Tree Identity + Full Multi-Item Last Care Summary -->
+            <div class="nfc-tree-card">
+              <div class="tree-top-row">
+                <span class="nfc-pill"><span class="nfc-dot"></span><span class="nfc-verbose">Đã nhận chip </span><span>NFC</span></span>
+                <span class="tree-code" id="tree-code-el">Mã #BM-088</span>
+              </div>
+              <h1 class="tree-title" id="tree-name-el">Mai Vàng Cổ Thụ Dáng Trực</h1>
+              <p class="tree-owner" id="tree-owner-el">Vườn chú Nguyễn Hoàng Mai · Ấp 4, xã Bình Mỹ</p>
+
+              <div class="last-care-box">
+                <span class="lc-header" id="lc-label-el">Lần chăm gần nhất (16/10):</span>
+                <span class="lc-items-text" id="lc-text-el">Tưới nước + Tỉa cành + Bón phân</span>
+                <!-- Full-Icon visual strip when Simple Mode is active -->
+                <div class="lc-icon-strip" id="lc-icons-el" aria-label="Lần chăm gần nhất"></div>
+              </div>
+            </div>
+
+            <!-- 2. Captured Tree Photo right in the Middle of the UI -->
+            <div class="center-tree-photo-card">
+              <img
+                id="center-tree-img"
+                class="center-tree-img"
+                src="cay_mai_vang_chu_mai.jpg"
+                alt="Ảnh thực tế của cây đã chụp tại vườn"
+              />
+              <div class="tree-photo-badge">
+                <span>📸</span>
+                <span class="tpb-label">Ảnh dáng cây ·</span>
+                <span id="tree-photo-date-el">16/10</span>
+              </div>
+              <div class="tree-photo-note-pill" id="tree-photo-note-pill" style="display:none;"></div>
+            </div>
+
+            <!-- 3. Symmetrical Action Pad -->
+            <div class="action-pad">
+              <!-- Row 1 Horizontal Box: Cập nhật hình dáng cây -->
+              <button type="button" class="wide-action-btn update-shape-btn" onclick="startShapeUpdateFlow()" aria-label="Cập nhật hình dáng cây">
+                <svg class="wide-btn-icon" viewBox="0 0 64 64"><use href="#ico-tree-cam"/></svg>
+                <span class="wide-btn-label">Cập nhật hình dáng cây</span>
+                <span class="sm-only-cue">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F6E099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+                  <svg width="38" height="38" viewBox="0 0 64 64"><use href="#ico-mini-tree"/></svg>
+                </span>
+              </button>
+
+              <!-- Middle 2x2 Square Checkboxes -->
+              <div class="square-checkbox-grid" id="square-task-grid"></div>
+
+              <!-- Bottom Horizontal Button (Exact same size as Cập nhật hình dáng cây): Quét cây khác -->
+              <button type="button" class="wide-action-btn scan-other-btn" onclick="openScanOtherTree()" aria-label="Quét cây khác">
+                <svg class="wide-btn-icon" viewBox="0 0 64 64"><use href="#ico-nfc-scan"/></svg>
+                <span class="wide-btn-label">Quét cây khác</span>
+                <span class="sm-only-cue">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F6E099" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 2 21 6 17 10"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 22 3 18 7 14"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  <svg width="38" height="38" viewBox="0 0 64 64"><use href="#ico-mini-tree"/></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 2: CAMERA CAPTURE ==================== -->
+        <section class="screen" id="screen-camera">
+          <div class="subscreen-nav">
+            <button type="button" class="back-btn" onclick="goScreen('screen-list')">← Quay lại</button>
+            <span class="step-chip">Bước 1 / 2 · Chụp ảnh</span>
+          </div>
+
+          <div class="cam-guide-box">
+            <div class="cam-task-tag" id="cam-task-label">Đang chọn: Bón phân</div>
+            <h2 class="cam-headline" id="cam-guide-text">Chụp lại bao phân hoặc thau phân đem ra vườn bón</h2>
+          </div>
+
+          <div class="viewfinder-wrap">
+            <div class="vf-corner tl"></div>
+            <div class="vf-corner tr"></div>
+            <div class="vf-corner bl"></div>
+            <div class="vf-corner br"></div>
+
+            <img id="vf-sample-img" class="vf-sample-img" src="bich_phan_bon_huu_co.png" alt="Khung ngắm chụp ảnh" />
+            <video id="vf-live-video" class="vf-live-video" autoplay playsinline muted></video>
+            <div class="vf-caption-pill" id="vf-caption-pill">Đưa vào giữa khung hình rồi bấm chụp</div>
+          </div>
+
+          <input type="file" id="real-file-input" accept="image/*" capture="environment" style="display:none" onchange="handleFilePicked(event)" />
+
+          <div class="cam-controls-dock">
+            <button type="button" class="shutter-primary-btn" id="shutter-btn" onclick="capturePhotoNow()">
+              <span class="shutter-ring" aria-hidden="true"></span>
+              <span id="shutter-btn-text">Bấm chụp hình</span>
+            </button>
+            <div class="cam-secondary-row">
+              <button type="button" class="cam-sec-btn" onclick="triggerFileUpload()">🖼️ Chọn ảnh trong máy</button>
+              <button type="button" class="cam-sec-btn" id="live-cam-btn" onclick="toggleRealCamera()">📷 Mở Camera thật</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 3: PHOTO REVIEW + MANUAL NOTE ==================== -->
+        <section class="screen" id="screen-note">
+          <div class="subscreen-nav">
+            <button type="button" class="back-btn" onclick="goScreen('screen-camera')">← Chụp lại</button>
+            <span class="step-chip">Bước 2 / 2 · Mô tả thêm</span>
+          </div>
+
+          <div class="scroll-body">
+            <div class="captured-preview-card">
+              <img id="captured-preview-img" class="captured-img" src="bich_phan_bon_huu_co.png" alt="Ảnh vừa chụp" />
+              <div class="captured-meta">
+                <div class="captured-task-title" id="note-task-title">Bón phân</div>
+                <div class="captured-timestamp" id="note-timestamp">Đã chụp lúc 07:35 hôm nay</div>
+                <div class="retake-row">
+                  <button type="button" class="retake-inline-btn" onclick="goScreen('screen-camera')">Chụp lại ảnh</button>
+                  <button type="button" class="retake-inline-btn danger" id="uncheck-inline-btn" style="display:none;" onclick="removeActiveTaskRecord()">Bỏ chọn ô này</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="note-box-card">
+              <label class="note-label" for="farmer-note-input" id="note-box-label">Nhập thêm mô tả (nếu cần):</label>
+              <p class="note-helper" id="note-box-helper">
+                Phòng khi ảnh chưa rõ chữ hoặc mình <strong>đã trộn sẵn phân ở nhà</strong> rồi mới đem ra vườn bón:
+              </p>
+              <textarea
+                id="farmer-note-input"
+                class="farmer-textarea"
+                placeholder="Ví dụ: Đã trộn sẵn 2kg phân hữu cơ Eco Hub với nấm Trichoderma ở nhà rồi đem ra vườn bón..."
+              ></textarea>
+
+              <div class="quick-chips-label">Bấm câu gợi ý nhanh (hoặc tự gõ ở trên):</div>
+              <div class="quick-chips" id="quick-chips-box"></div>
+            </div>
+          </div>
+
+          <div class="save-dock">
+            <button type="button" class="save-nfc-btn" id="save-nfc-btn" onclick="saveCurrentFlow()">
+              <span>✓ Lưu vào thẻ chip NFC của cây</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 4: NFC SCANNING ("ĐANG QUÉT") ==================== -->
+        <section class="screen" id="screen-scan">
+          <div class="scan-screen-body">
+            <div style="width:100%;display:flex;justify-content:flex-start;">
+              <button type="button" class="cancel-scan-btn" style="width:auto;padding:7px 14px;" onclick="goScreen('screen-list')">← Quay lại</button>
+            </div>
+
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="scan-radar-stage" aria-hidden="true">
+                <div class="radar-ring r1"></div>
+                <div class="radar-ring r2"></div>
+                <div class="radar-ring r3"></div>
+                <div class="radar-core">
+                  <svg width="56" height="56" viewBox="0 0 64 64"><use href="#ico-nfc-scan"/></svg>
+                </div>
+              </div>
+
+              <h2 class="scan-status-title">Đang quét...</h2>
+              <p class="scan-status-desc">
+                Đưa mặt lưng điện thoại lại gần thẻ chip NFC gắn trên thân cây tiếp theo để mở sổ chăm sóc.
+              </p>
+            </div>
+
+            <div class="scan-actions">
+              <button type="button" class="sim-nfc-hit-btn" onclick="completeSimulatedNfcScan()">
+                📲 Mô phỏng chạm trúng thẻ cây kế tiếp
+              </button>
+              <button type="button" class="cancel-scan-btn" onclick="goScreen('screen-list')">
+                Hủy quét
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Confirmation Toast -->
+        <div class="app-toast" id="app-toast" role="status" aria-live="polite">
+          <span>✅</span>
+          <span id="app-toast-msg">Đã lưu vào sổ chăm cây!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== DESKTOP QUICK TEST PANEL ==================== -->
+    <aside class="tester-panel">
+      <span class="tp-badge">Bản chạy thử Localhost · Đã cập nhật theo ý tưởng mới</span>
+      <h2 class="tp-title">GreenID Nhà Vườn — Bố cục Ảnh Cây Ở Giữa · 4 Ô Vuông · Simple Mode</h2>
+      <p class="tp-lead">
+        Giao diện đồng bộ hệ màu <strong>Poster Điền Trang Đại Đồng</strong>, bố trí gọn trong đúng 1 màn hình điện thoại không cần cuộn dài:
+      </p>
+
+      <div class="tp-flow-steps">
+        <div class="tp-step">
+          <strong>1 · Lịch sử gộp đầy đủ + Ảnh cây đã chụp ở giữa</strong>
+          Mục <em>Lần chăm gần nhất</em> liệt kê trọn bộ công việc lần trước (<code>Tưới nước + Tỉa cành + Bón phân</code>). Ngay bên dưới là khung ảnh thực tế của cây.
+        </div>
+        <div class="tp-step">
+          <strong>2 · Hàng đầu "Cập nhật hình dáng cây" + 4 Box vuông + Đáy "Quét cây khác"</strong>
+          Nút ngang đầu tiên để chụp cập nhật dáng cây; ở giữa là 4 checkbox vuông vừa vặn (bấm vào mở Camera chụp sản phẩm → nhập tay phân trộn sẵn); dưới cùng là nút <em>Quét cây khác</em> bằng khít kích thước, bấm vào hiện ngay màn <strong>"Đang quét..."</strong>.
+        </div>
+        <div class="tp-step">
+          <strong>3 · Chế độ đơn giản (Simple mode) — Thuần Icon tinh tế</strong>
+          Gạt công tắc <strong>Chế độ đơn giản</strong> góc trên bên phải để chuyển sang giao diện Full Icon nhận diện tức thì, không dùng chữ phóng to thô kệch.
+        </div>
+      </div>
+
+      <div class="tp-controls-title">CÔNG CỤ TEST NHANH TRÊN PC:</div>
+      <div class="tp-btn-grid">
+        <button type="button" class="tp-btn" onclick="toggleSimpleMode()">✨ Bật / Tắt Simple Mode (Full Icon)</button>
+        <button type="button" class="tp-btn" onclick="openScanOtherTree()">📡 Bấm thử nút "Quét cây khác"</button>
+        <button type="button" class="tp-btn" onclick="startShapeUpdateFlow()">🌳 Test "Cập nhật hình dáng cây"</button>
+        <button type="button" class="tp-btn" onclick="startTaskFlow('fertilize')">🌱 Test Checkbox "Bón phân"</button>
+        <button type="button" class="tp-btn" style="grid-column: span 2;" onclick="resetCurrentTreeDemo()">🔄 Khôi phục trạng thái mẫu ban đầu</button>
+      </div>
+
+      <div class="palette-strip">
+        <span>Bảng màu Poster:</span>
+        <span class="swatch" style="background:#063F28" title="#063F28 Xanh Rừng Sâu"></span>
+        <span class="swatch" style="background:#4D7A32" title="#4D7A32 Xanh Rêu Poster"></span>
+        <span class="swatch" style="background:#DCB254" title="#DCB254 Vàng Đông Sơn"></span>
+        <span class="swatch" style="background:#ECF1E5" title="#ECF1E5 Nền Sương Sớm"></span>
+        <span class="swatch" style="background:#8CC63F" title="#8CC63F Mầm Xanh"></span>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const TREES_DB = [
+      {
+        code: 'Mã #BM-088',
+        name: 'Mai Vàng Cổ Thụ Dáng Trực',
+        owner: 'Vườn chú Nguyễn Hoàng Mai · Ấp 4, xã Bình Mỹ',
+        photo: 'cay_mai_vang_chu_mai.jpg',
+        photoDate: '16/10',
+        photoNote: '',
+        prevDate: '16/10',
+        prevTasks: ['water', 'prune', 'fertilize'],
+        records: {}
+      },
+      {
+        code: 'Mã #BM-024',
+        name: 'Bưởi Da Xanh Giữ Đất Bờ Sông',
+        owner: 'Vườn liên kết HTX Sinh thái Bình Mỹ · Củ Chi',
+        photo: 'cay_buoi_da_xanh_binh_my.jpg',
+        photoDate: '24/10',
+        photoNote: '',
+        prevDate: '24/10',
+        prevTasks: ['water', 'bio_spray', 'fertilize'],
+        records: {}
+      }
+    ];
+
+    const TASKS = [
+      {
+        id: 'fertilize',
+        name: 'Bón phân',
+        iconId: 'ico-fertilize',
+        guide: 'Chụp lại bao phân hoặc thau phân đem ra vườn bón',
+        defaultImg: 'bich_phan_bon_huu_co.png',
+        chips: [
+          'Đã trộn sẵn phân ở nhà trước khi đem bón',
+          'Phân hữu cơ vi sinh Eco Hub (2kg/gốc)',
+          'Trộn thêm nấm đối kháng Trichoderma'
+        ]
+      },
+      {
+        id: 'water',
+        name: 'Tưới nước',
+        iconId: 'ico-water',
+        guide: 'Chụp lại chế phẩm pha tưới hoặc gốc cây sau khi tưới',
+        defaultImg: 'bich_phan_bon_huu_co.png',
+        chips: [
+          'Tưới đẫm nước sạch buổi sáng sớm',
+          'Có pha thêm dịch trùn quế dưỡng rễ'
+        ]
+      },
+      {
+        id: 'prune',
+        name: 'Tỉa cành',
+        iconId: 'ico-prune',
+        guide: 'Chụp lại cành tán vừa cắt tỉa hoặc keo liền sẹo',
+        defaultImg: 'cay_mai_vang_chu_mai.jpg',
+        chips: [
+          'Tỉa cành tăm tạo tán thoáng đón nắng',
+          'Đã bôi keo liền sẹo chống nấm vết cắt'
+        ]
+      },
+      {
+        id: 'bio_spray',
+        name: 'Phun sinh học',
+        iconId: 'ico-biospray',
+        guide: 'Chụp rõ nhãn chai chế phẩm thảo mộc / vi sinh an toàn',
+        defaultImg: 'bich_phan_bon_huu_co.png',
+        chips: [
+          'Dung dịch gừng tỏi ớt ngâm sinh học tự pha',
+          'Không dùng thuốc bảo vệ thực vật hóa học'
+        ]
+      }
+    ];
+
+    let currentTreeIdx = 0;
+    let flowMode = 'task'; // 'task' | 'shape'
+    let activeTaskId = 'fertilize';
+    let currentCapturedSrc = 'bich_phan_bon_huu_co.png';
+    let currentCaptureTime = '';
+    let mediaStream = null;
+
+    function getTree() {
+      return TREES_DB[currentTreeIdx];
+    }
+
+    function formatNowClock() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      return `${hh}:${mm}`;
+    }
+
+    function formatTodayDate() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mo = String(now.getMonth() + 1).padStart(2, '0');
+      return `${dd}/${mo}`;
+    }
+
+    function taskById(id) {
+      return TASKS.find(t => t.id === id) || TASKS[0];
+    }
+
+    function renderHome() {
+      const tree = getTree();
+      document.getElementById('tree-code-el').textContent = tree.code;
+      document.getElementById('tree-name-el').textContent = tree.name;
+      document.getElementById('tree-owner-el').textContent = tree.owner;
+
+      // Center tree photo
+      document.getElementById('center-tree-img').src = tree.photo;
+      document.getElementById('tree-photo-date-el').textContent = tree.photoDate;
+      const notePill = document.getElementById('tree-photo-note-pill');
+      if (tree.photoNote) {
+        notePill.textContent = `📝 ${tree.photoNote}`;
+        notePill.style.display = 'inline-block';
+      } else {
+        notePill.style.display = 'none';
+      }
+
+      // Last care multi-item list: if user has checked tasks today, list ALL today's checked tasks; otherwise show full previous session tasks
+      const todayTaskIds = TASKS.map(t => t.id).filter(id => !!tree.records[id]);
+      const activeIds = todayTaskIds.length > 0 ? todayTaskIds : tree.prevTasks;
+      const dateStr = todayTaskIds.length > 0 ? `Hôm nay (${formatTodayDate()})` : tree.prevDate;
+
+      document.getElementById('lc-label-el').textContent = `Lần chăm gần nhất (${dateStr}):`;
+      document.getElementById('lc-text-el').textContent = activeIds.map(id => taskById(id).name).join(' + ');
+
+      // Simple Mode visual icon strip for Last Care
+      const iconStrip = document.getElementById('lc-icons-el');
+      iconStrip.innerHTML = activeIds.map((id, idx) => {
+        const t = taskById(id);
+        return `
+          ${idx > 0 ? '<span class="lc-plus">+</span>' : ''}
+          <span class="lc-mini-pill" title="${t.name}">
+            <svg viewBox="0 0 64 64"><use href="#${t.iconId}"/></svg>
+          </span>
+        `;
+      }).join('') + `<span class="lc-date-chip">${dateStr}</span>`;
+
+      // Render 2x2 Square Checkboxes
+      const grid = document.getElementById('square-task-grid');
+      grid.innerHTML = TASKS.map(t => {
+        const rec = tree.records[t.id];
+        const isChecked = !!rec;
+        return `
+          <div class="sq-task-card ${isChecked ? 'checked' : ''}" onclick="onSquareCardClick('${t.id}', event)" role="button" tabindex="0" aria-label="${t.name}">
+            <div class="sq-top-bar">
+              <div class="sq-checkbox" onclick="onCheckboxCornerClick('${t.id}', event)" role="checkbox" aria-checked="${isChecked}" title="${isChecked ? 'Bấm để bỏ chọn nhanh' : 'Bấm để chọn & chụp ảnh'}">
+                <svg class="sq-check-svg" viewBox="0 0 24 24" fill="none" stroke="#F7E29B" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              ${isChecked
+                ? `<span class="sq-saved-pill" title="${rec.note ? escapeHtml(rec.note) : 'Đã lưu ảnh'}">
+                     <img class="sq-saved-thumb" src="${rec.photo}" alt="" />
+                     <span>${rec.clock}</span>
+                   </span>`
+                : `<span class="sq-cam-mini">📷 Chụp</span>`
+              }
+            </div>
+            <div class="sq-center-content">
+              <svg class="sq-icon-svg" viewBox="0 0 64 64" aria-hidden="true">
+                <use href="#${t.iconId}"/>
+              </svg>
+              <span class="sq-task-label">${t.name}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]));
+    }
+
+    function onCheckboxCornerClick(taskId, ev) {
+      const tree = getTree();
+      if (tree.records[taskId]) {
+        ev.stopPropagation();
+        delete tree.records[taskId];
+        renderHome();
+        showToast(`Đã bỏ chọn "${taskById(taskId).name}"`);
+      }
+    }
+
+    function onSquareCardClick(taskId) {
+      const tree = getTree();
+      if (tree.records[taskId]) {
+        // Edit existing record
+        flowMode = 'task';
+        activeTaskId = taskId;
+        currentCapturedSrc = tree.records[taskId].photo;
+        currentCaptureTime = `${tree.records[taskId].clock} hôm nay (${formatTodayDate()})`;
+        populateNoteScreen(tree.records[taskId].note || '', true);
+        goScreen('screen-note');
+      } else {
+        startTaskFlow(taskId);
+      }
+    }
+
+    // Flow A: Care Checkbox -> Camera -> Manual Note
+    function startTaskFlow(taskId) {
+      stopRealCamera();
+      flowMode = 'task';
+      activeTaskId = taskId;
+      const task = taskById(taskId);
+      document.getElementById('cam-task-label').textContent = `Công việc: ${task.name}`;
+      document.getElementById('cam-guide-text').textContent = task.guide;
+      document.getElementById('vf-caption-pill').textContent = 'Đưa sản phẩm vào giữa khung hình';
+      document.getElementById('shutter-btn-text').textContent = 'Bấm chụp hình sản phẩm';
+
+      const sampleEl = document.getElementById('vf-sample-img');
+      sampleEl.src = task.defaultImg;
+      sampleEl.classList.toggle('cover-mode', taskId === 'prune');
+      sampleEl.style.display = 'block';
+      currentCapturedSrc = task.defaultImg;
+      goScreen('screen-camera');
+    }
+
+    // Flow B: Row 1 "Cập nhật hình dáng cây" -> Camera -> Optional Note -> Updates Center Photo
+    function startShapeUpdateFlow() {
+      stopRealCamera();
+      flowMode = 'shape';
+      const tree = getTree();
+      document.getElementById('cam-task-label').textContent = `Cập nhật ảnh: ${tree.code}`;
+      document.getElementById('cam-guide-text').textContent = 'Chụp toàn cảnh hình dáng cây hiện tại để lưu vào hồ sơ';
+      document.getElementById('vf-caption-pill').textContent = 'Căn trọn dáng cây vào khung ngắm';
+      document.getElementById('shutter-btn-text').textContent = 'Bấm chụp hình dáng cây';
+
+      const sampleEl = document.getElementById('vf-sample-img');
+      sampleEl.src = tree.photo;
+      sampleEl.classList.add('cover-mode');
+      sampleEl.style.display = 'block';
+      currentCapturedSrc = tree.photo;
+      goScreen('screen-camera');
+    }
+
+    function capturePhotoNow() {
+      const video = document.getElementById('vf-live-video');
+      if (mediaStream && video.style.display === 'block' && video.videoWidth > 0) {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        currentCapturedSrc = canvas.toDataURL('image/jpeg', 0.88);
+        stopRealCamera();
+      } else {
+        currentCapturedSrc = document.getElementById('vf-sample-img').src;
+      }
+      currentCaptureTime = `${formatNowClock()} hôm nay (${formatTodayDate()})`;
+
+      if (flowMode === 'shape') {
+        populateNoteScreen(getTree().photoNote || '', false);
+      } else {
+        const existing = getTree().records[activeTaskId];
+        populateNoteScreen(existing ? existing.note : '', !!existing);
+      }
+      goScreen('screen-note');
+    }
+
+    function triggerFileUpload() {
+      document.getElementById('real-file-input').click();
+    }
+
+    function handleFilePicked(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        stopRealCamera();
+        currentCapturedSrc = e.target.result;
+        document.getElementById('vf-sample-img').src = currentCapturedSrc;
+        currentCaptureTime = `${formatNowClock()} hôm nay (${formatTodayDate()})`;
+        if (flowMode === 'shape') {
+          populateNoteScreen(getTree().photoNote || '', false);
+        } else {
+          const existing = getTree().records[activeTaskId];
+          populateNoteScreen(existing ? existing.note : '', !!existing);
+        }
+        goScreen('screen-note');
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    async function toggleRealCamera() {
+      const video = document.getElementById('vf-live-video');
+      const img = document.getElementById('vf-sample-img');
+      const btn = document.getElementById('live-cam-btn');
+      if (mediaStream) {
+        stopRealCamera();
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('Trình duyệt không hỗ trợ mở trực tiếp Camera — hãy dùng Chọn ảnh nhé!');
+        return;
+      }
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+        video.srcObject = mediaStream;
+        video.style.display = 'block';
+        img.style.display = 'none';
+        btn.textContent = '⏹️ Tắt Camera thật';
+      } catch (_) {
+        showToast('Chưa cấp quyền Camera — bạn có thể bấm Chụp hình mẫu hoặc Chọn ảnh nhé!');
+      }
+    }
+
+    function stopRealCamera() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(tr => tr.stop());
+        mediaStream = null;
+      }
+      const video = document.getElementById('vf-live-video');
+      const img = document.getElementById('vf-sample-img');
+      const btn = document.getElementById('live-cam-btn');
+      if (video) video.style.display = 'none';
+      if (img) img.style.display = 'block';
+      if (btn) btn.textContent = '📷 Mở Camera thật';
+    }
+
+    function populateNoteScreen(initialNote, showUncheck) {
+      document.getElementById('captured-preview-img').src = currentCapturedSrc;
+      document.getElementById('note-timestamp').textContent = `Đã chụp lúc ${currentCaptureTime}`;
+      document.getElementById('uncheck-inline-btn').style.display = showUncheck ? 'inline-block' : 'none';
+
+      const textarea = document.getElementById('farmer-note-input');
+      textarea.value = initialNote;
+
+      const chipsBox = document.getElementById('quick-chips-box');
+      if (flowMode === 'shape') {
+        document.getElementById('note-task-title').textContent = 'Cập nhật hình dáng cây';
+        document.getElementById('note-box-label').textContent = 'Ghi chú thêm về dáng cây (nếu cần):';
+        document.getElementById('note-box-helper').innerHTML = 'Ví dụ: Cây đang ra lộc non, vừa uốn lại cành ngọn đón nắng...';
+        textarea.placeholder = 'Ví dụ: Cây ra đọt non khỏe, tán đều đẹp...';
+        const shapeChips = ['Cây ra lộc non khỏe mạnh', 'Vừa uốn sửa lại tán cây', 'Đang ôm nụ chuẩn bị trổ bông'];
+        chipsBox.innerHTML = shapeChips.map(c =>
+          `<button type="button" class="q-chip" onclick="appendChipText('${c}')">+ ${c}</button>`
+        ).join('');
+      } else {
+        const task = taskById(activeTaskId);
+        document.getElementById('note-task-title').textContent = task.name;
+        document.getElementById('note-box-label').textContent = 'Nhập thêm mô tả (nếu cần):';
+        document.getElementById('note-box-helper').innerHTML =
+          'Phòng khi ảnh chưa đủ thông tin hoặc mình <strong>đã trộn sẵn phân ở nhà</strong> rồi mới đem ra vườn bón:';
+        textarea.placeholder = 'Ví dụ: Đã trộn sẵn 2kg phân hữu cơ Eco Hub với nấm Trichoderma ở nhà rồi đem ra vườn bón...';
+        chipsBox.innerHTML = task.chips.map(c =>
+          `<button type="button" class="q-chip" onclick="appendChipText('${c.replace(/'/g, "\\'")}')">+ ${c}</button>`
+        ).join('');
+      }
+    }
+
+    function appendChipText(phrase) {
+      const ta = document.getElementById('farmer-note-input');
+      const cur = ta.value.trim();
+      ta.value = cur ? `${cur}. ${phrase}` : phrase;
+      ta.focus();
+    }
+
+    function saveCurrentFlow() {
+      const tree = getTree();
+      const noteVal = document.getElementById('farmer-note-input').value.trim();
+
+      if (flowMode === 'shape') {
+        tree.photo = currentCapturedSrc;
+        tree.photoDate = `Hôm nay (${formatTodayDate()})`;
+        tree.photoNote = noteVal;
+        renderHome();
+        goScreen('screen-list');
+        showToast('Đã cập nhật ảnh hình dáng cây mới!');
+      } else {
+        const task = taskById(activeTaskId);
+        tree.records[activeTaskId] = {
+          photo: currentCapturedSrc,
+          clock: formatNowClock(),
+          note: noteVal
+        };
+        renderHome();
+        goScreen('screen-list');
+        showToast(`Đã lưu "${task.name}" vào thẻ NFC!`);
+      }
+    }
+
+    function removeActiveTaskRecord() {
+      const tree = getTree();
+      delete tree.records[activeTaskId];
+      renderHome();
+      goScreen('screen-list');
+      showToast('Đã bỏ đánh dấu công việc.');
+    }
+
+    // Flow C: Bottom "Quét cây khác" -> Shows "Đang quét..."
+    function openScanOtherTree() {
+      stopRealCamera();
+      goScreen('screen-scan');
+    }
+
+    function completeSimulatedNfcScan() {
+      currentTreeIdx = (currentTreeIdx + 1) % TREES_DB.length;
+      renderHome();
+      goScreen('screen-list');
+      showToast(`Đã nhận thẻ NFC ${getTree().code}!`);
+    }
+
+    function goScreen(screenId) {
+      if (screenId !== 'screen-camera') stopRealCamera();
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    // Refined Simple Mode Toggle
+    function toggleSimpleMode() {
+      document.body.classList.toggle('simple-mode');
+      const isOn = document.body.classList.contains('simple-mode');
+      const btn = document.getElementById('simple-mode-btn');
+      btn.classList.toggle('active', isOn);
+      btn.setAttribute('aria-checked', String(isOn));
+      showToast(isOn ? 'Đã bật Chế độ đơn giản (Full Icon)' : 'Đã chuyển về Chế độ chuẩn');
+    }
+
+    function resetCurrentTreeDemo() {
+      const tree = getTree();
+      tree.records = {};
+      tree.photo = currentTreeIdx === 0 ? 'cay_mai_vang_chu_mai.jpg' : 'cay_buoi_da_xanh_binh_my.jpg';
+      tree.photoDate = currentTreeIdx === 0 ? '16/10' : '24/10';
+      tree.photoNote = '';
+      renderHome();
+      goScreen('screen-list');
+      showToast('Đã khôi phục dữ liệu mẫu ban đầu!');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('app-toast');
+      document.getElementById('app-toast-msg').textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    renderHome();
+  </script>
+</body>
+</html>
