@@ -1159,7 +1159,7 @@
     }
 
     /* ==========================================================================
-       RIGHT PANEL: DESKTOP INSPECTOR / FLOW TESTER
+       RIGHT PANEL: PRODUCT GUIDE & QUICK ACTIONS (DESKTOP)
        ========================================================================== */
     .tester-panel {
       flex: 1;
@@ -1167,19 +1167,8 @@
       background: var(--card-cream);
       border: 2px solid var(--line-sage);
       border-radius: 22px;
-      padding: 22px 25px;
+      padding: 24px 26px;
       box-shadow: 0 14px 36px rgba(6, 63, 40, 0.08);
-    }
-
-    .tp-badge {
-      display: inline-block;
-      background: var(--moss-banner);
-      color: #FFFFFF;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 4px 11px;
-      border-radius: 99px;
-      margin-bottom: 9px;
     }
 
     .tp-title {
@@ -1234,7 +1223,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 0;
     }
 
     .tp-btn {
@@ -1252,23 +1241,6 @@
     .tp-btn:hover {
       background: var(--gold-soft);
       border-color: var(--gold-bronze);
-    }
-
-    .palette-strip {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      padding-top: 11px;
-      border-top: 1px dashed var(--line-sage);
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--ink-muted);
-    }
-    .swatch {
-      width: 20px;
-      height: 20px;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.18);
     }
 
     @media (max-width: 900px) {
@@ -1628,45 +1600,35 @@
       </div>
     </div>
 
-    <!-- ==================== DESKTOP QUICK TEST PANEL ==================== -->
+    <!-- ==================== DESKTOP PRODUCT GUIDE & QUICK ACTIONS ==================== -->
     <aside class="tester-panel">
-      <span class="tp-badge">Bản chạy thử Localhost · Đã cập nhật theo ý tưởng mới</span>
-      <h2 class="tp-title">GreenID Nhà Vườn — Bố cục Ảnh Cây Ở Giữa · 4 Ô Vuông · Simple Mode</h2>
+      <h2 class="tp-title">Sổ Chăm Cây Điện Tử GreenID</h2>
       <p class="tp-lead">
-        Giao diện đồng bộ hệ màu <strong>Poster Điền Trang Đại Đồng</strong>, bố trí gọn trong đúng 1 màn hình điện thoại không cần cuộn dài:
+        Chạm điện thoại vào thẻ chip NFC trên thân cây để cập nhật và minh bạch hóa nhật ký canh tác ngay trên <strong>Zalo Mini Web</strong> — không cần tải ứng dụng.
       </p>
 
       <div class="tp-flow-steps">
         <div class="tp-step">
-          <strong>1 · Lịch sử gộp đầy đủ + Ảnh cây đã chụp ở giữa</strong>
-          Mục <em>Lần chăm gần nhất</em> liệt kê trọn bộ công việc lần trước (<code>Tưới nước + Tỉa cành + Bón phân</code>). Ngay bên dưới là khung ảnh thực tế của cây.
+          <strong>1 · Theo dõi trọn vẹn lịch sử &amp; hình dáng cây thực tế</strong>
+          Mục <em>Lần chăm gần nhất</em> tổng hợp đầy đủ các công việc vừa thực hiện kèm ảnh thực tế của cây tại vườn, giúp cả nhà vườn lẫn người nhận nuôi cây nắm bắt tình trạng tức thì.
         </div>
         <div class="tp-step">
-          <strong>2 · Hàng đầu "Cập nhật hình dáng cây" + 4 Box vuông + Đáy "Quét cây khác"</strong>
-          Nút ngang đầu tiên để chụp cập nhật dáng cây; ở giữa là 4 checkbox vuông vừa vặn (bấm vào mở Camera chụp sản phẩm → nhập tay phân trộn sẵn); dưới cùng là nút <em>Quét cây khác</em> bằng khít kích thước, bấm vào hiện ngay màn <strong>"Đang quét..."</strong>.
+          <strong>2 · Ghi nhận nhật ký minh bạch bằng hình ảnh</strong>
+          Chọn công việc trong ngày để chụp lại phân bón, chế phẩm sinh học hoặc cập nhật dáng cây mới; hỗ trợ ghi chú bổ sung và lưu thẳng vào thẻ NFC chỉ sau vài giây.
         </div>
         <div class="tp-step">
-          <strong>3 · Chế độ đơn giản (Simple mode) — Thuần Icon tinh tế</strong>
-          Gạt công tắc <strong>Chế độ đơn giản</strong> góc trên bên phải để chuyển sang giao diện Full Icon nhận diện tức thì, không dùng chữ phóng to thô kệch.
+          <strong>3 · Chế độ đơn giản (Simple mode) trực quan ngoài vườn</strong>
+          Gạt công tắc <strong>Chế độ đơn giản</strong> góc trên bên phải để chuyển sang giao diện biểu tượng rõ nét, giúp cô chú nhà vườn thao tác nhanh chóng ngay dưới nắng.
         </div>
       </div>
 
-      <div class="tp-controls-title">CÔNG CỤ TEST NHANH TRÊN PC:</div>
+      <div class="tp-controls-title">TRẢI NGHIỆM NHANH TRÊN MÁY TÍNH:</div>
       <div class="tp-btn-grid">
-        <button type="button" class="tp-btn" onclick="toggleSimpleMode()">✨ Bật / Tắt Simple Mode (Full Icon)</button>
-        <button type="button" class="tp-btn" onclick="openScanOtherTree()">📡 Bấm thử nút "Quét cây khác"</button>
-        <button type="button" class="tp-btn" onclick="startShapeUpdateFlow()">🌳 Test "Cập nhật hình dáng cây"</button>
-        <button type="button" class="tp-btn" onclick="startTaskFlow('fertilize')">🌱 Test Checkbox "Bón phân"</button>
-        <button type="button" class="tp-btn" style="grid-column: span 2;" onclick="resetCurrentTreeDemo()">🔄 Khôi phục trạng thái mẫu ban đầu</button>
-      </div>
-
-      <div class="palette-strip">
-        <span>Bảng màu Poster:</span>
-        <span class="swatch" style="background:#063F28" title="#063F28 Xanh Rừng Sâu"></span>
-        <span class="swatch" style="background:#4D7A32" title="#4D7A32 Xanh Rêu Poster"></span>
-        <span class="swatch" style="background:#DCB254" title="#DCB254 Vàng Đông Sơn"></span>
-        <span class="swatch" style="background:#ECF1E5" title="#ECF1E5 Nền Sương Sớm"></span>
-        <span class="swatch" style="background:#8CC63F" title="#8CC63F Mầm Xanh"></span>
+        <button type="button" class="tp-btn" onclick="toggleSimpleMode()">✨ Chuyển đổi Chế độ đơn giản</button>
+        <button type="button" class="tp-btn" onclick="openScanOtherTree()">📡 Quét thẻ NFC cây tiếp theo</button>
+        <button type="button" class="tp-btn" onclick="startShapeUpdateFlow()">📷 Cập nhật hình dáng cây</button>
+        <button type="button" class="tp-btn" onclick="startTaskFlow('fertilize')">🌱 Ghi nhận mục "Bón phân"</button>
+        <button type="button" class="tp-btn" style="grid-column: span 2;" onclick="resetCurrentTreeDemo()">🔄 Đặt lại trạng thái ban đầu</button>
       </div>
     </aside>
   </div>
